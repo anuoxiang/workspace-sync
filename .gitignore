@@ -1,0 +1,34 @@
+# compiled output
+dist
+node_modules
+
+# Logs
+logs
+*.log
+*.env
+*.bkp
+*.key
+*.pem
+
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+
+# DB
+.db/*
+
+# Tests
+/coverage
+/.nyc_output
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
