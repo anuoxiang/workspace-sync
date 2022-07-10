@@ -44,9 +44,23 @@ export class SyncAction extends AbstractAction {
       { path: this.getRootPath(inputs) },
       this.getExcludes(options),
     ).then((results) => {
-      console.log(results);
+      this.writeJSONFile(
+        JSON.stringify(results?.subs || results),
+      );
+      // console.dir(JSON.stringify(results));
+      console.log('done');
     });
     return;
+  }
+
+  writeJSONFile(json: string, filePath?: string): void {
+    fs.writeFileSync(
+      path.resolve(
+        path.join(filePath ?? __dirname, 'wss.json'),
+      ),
+      json,
+      { encoding: 'utf8' },
+    );
   }
 
   getRootPath(inputs: Input[]): string {
@@ -74,12 +88,11 @@ export class SyncAction extends AbstractAction {
   async recursion(
     root: IDirAndGit,
     exclude: string[] = [],
-  ): Promise<IDirAndGit> {
+  ): Promise<IDirAndGit | null> {
     // 先看送来的目录有没有Git仓库，如果有，则赋予Git内容，且不再检查子目录
     const iRemote = await this.hasGitReo(
       path.resolve(root.path),
     );
-    console.log(root.path);
     if (!iRemote || iRemote.length === 0) {
       // 继续深挖
       const dirs = fs
@@ -103,14 +116,15 @@ export class SyncAction extends AbstractAction {
         const sub: IDirAndGit = {
           path: path.join(root.path, dir.name),
         };
-        subs.push(await this.recursion(sub));
+        const _r = await this.recursion(sub);
+        if (_r) subs.push(_r);
       }
-      root.subs = subs;
+      if (subs.length > 0) root.subs = subs;
     } else {
       root.git = iRemote;
     }
-
-    return root;
+    if (!root.git && !root.subs) return null;
+    else return root;
   }
 
   /**

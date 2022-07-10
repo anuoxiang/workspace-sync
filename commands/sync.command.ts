@@ -6,7 +6,7 @@ export class SyncCommand extends AbstractCommand {
   public load(program: Command): void {
     program
       // 主命令，当前命令的模块级应用
-      .command('sync <path-to-workspace>')
+      .command('sync [path-to-workspace]')
       // 别名
       .alias('s')
       .description('Sync workspace to remote storage')
@@ -22,7 +22,7 @@ export class SyncCommand extends AbstractCommand {
       // 处理命令参数
       .action(
         (
-          pathToWorkspace: string,
+          pathToWorkspace: string = './',
           command: OptionValues,
         ) => {
           // 必选关键参数
@@ -31,16 +31,11 @@ export class SyncCommand extends AbstractCommand {
             name: 'path',
             value: pathToWorkspace,
           });
-          // console.log(pathToWorkspace);
-          // console.log(command);
-
           const options: Input[] = [];
-
           options.push({
             name: 'exclude',
             value: command.exclude,
           });
-
           this.action.handle(inputs, options);
         },
       );
