@@ -9,6 +9,7 @@ logs
 *.bkp
 *.key
 *.pem
+*.map
 
 npm-debug.log*
 pnpm-debug.log*

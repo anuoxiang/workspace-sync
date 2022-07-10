@@ -2,7 +2,7 @@ import { Command, OptionValues } from 'commander';
 import { AbstractCommand } from './abstract.command';
 import { Input } from './command-input';
 
-export class SyncCommand extends AbstractCommand {
+export class ExportCommand extends AbstractCommand {
   public load(program: Command): void {
     program
       // 主命令，当前命令的模块级应用

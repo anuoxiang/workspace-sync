@@ -30,10 +30,7 @@ interface IDirAndGit {
   subs?: IDirAndGit[];
 }
 
-export class SyncAction extends AbstractAction {
-  // constructor() {
-  //   super();
-  // }
+export class ExportAction extends AbstractAction {
   public async handle(
     inputs: Input[],
     options?: Input[] | undefined,

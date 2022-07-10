@@ -1,9 +1,9 @@
 import { Command } from 'commander';
-import { SyncCommand } from './sync.command';
-import { SyncAction } from '../actions';
+import { ExportCommand } from './export.command';
+import { ExportAction } from '../actions';
 
 export class CommandLoader {
   public static load(program: Command): void {
-    new SyncCommand(new SyncAction()).load(program);
+    new ExportCommand(new ExportAction()).load(program);
   }
 }

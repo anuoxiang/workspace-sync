@@ -1,2 +1,2 @@
 export * from './abstract.action';
-export * from './sync.action';
+export * from './export.action';
