@@ -1,0 +1,19 @@
+import { IDirAndGit } from './dir-and-git.interface';
+
+/**
+ * 工作目录数据
+ */
+export interface IWorkspace {
+  /**
+   * 路径
+   */
+  path: string;
+  /**
+   * 生成日期
+   */
+  date: Date;
+  /**
+   * 子集仓库
+   */
+  repos: IDirAndGit[];
+}

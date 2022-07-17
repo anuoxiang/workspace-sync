@@ -2,12 +2,12 @@ import { AbstractAction } from '.';
 
 import * as path from 'path';
 import * as fs from 'fs';
-import { IActionParams } from '../interfaces';
+import { IActionParams, IWorkspace } from '../interfaces';
 
 export class SaveToFileAction extends AbstractAction {
   public async handle(
     params: IActionParams,
-    result?: any,
+    result?: IWorkspace,
   ): Promise<void> {
     // console.log('ok here', params, result);
     if (params.options?.output) {

@@ -6,6 +6,7 @@ import {
   IActionParams,
   IDirAndGit,
   IGitRemote,
+  IWorkspace,
 } from '../interfaces';
 
 /**
@@ -22,10 +23,21 @@ export class ExportAction extends AbstractAction {
       { path: inputs.path },
       options?.exclude || [],
     ).then((results) => {
-      this.next(
-        { inputs, options, extraFlags },
-        results?.subs || results,
-      );
+      if (results?.subs || results) {
+        // results 处理为 Iworkspace 对象
+        const workspace: IWorkspace = {
+          path: inputs.path,
+          date: new Date(),
+          repos: results?.subs || [results],
+        };
+        this.next(
+          { inputs, options, extraFlags },
+          workspace,
+        );
+      } else {
+        // 没有收货
+        console.log('No git repo found.');
+      }
     });
   }
 
