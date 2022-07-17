@@ -5,7 +5,6 @@ import {
   UploadToMockApiAction,
 } from '../actions';
 import { AbstractCommand } from './abstract.command';
-import { Input } from './command-input';
 import { SaveToFileCommand } from './save-to-file.command';
 import { UploadToMockAPICommand } from './upload-to-mockapi.command';
 

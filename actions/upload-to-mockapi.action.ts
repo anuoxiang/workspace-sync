@@ -16,11 +16,28 @@ export class UploadToMockApiAction extends AbstractAction {
   ): Promise<void> {
     // throw new Error('Method not implemented.');
     // console.log(params);
-    if (params.options?.api && result)
+    if (
+      params.options?.api &&
+      result &&
+      !params.options?.dry
+    )
       await this.saveData(params.options.api, result);
+
+    if (
+      params.options?.api &&
+      result &&
+      params.options?.dry
+    ) {
+      await this.getData(params.options.api);
+    }
   }
 
-  public async getData(): Promise<IDirAndGit | null> {
+  public async getData(
+    url: string,
+  ): Promise<IDirAndGit | null> {
+    const response = await axios.get(url);
+    // 找到
+    console.log(response.data);
     return null;
   }
 

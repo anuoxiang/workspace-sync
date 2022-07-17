@@ -13,6 +13,10 @@ export interface IWorkspace {
    */
   date: Date;
   /**
+   * 主机名
+   */
+  hostname: string;
+  /**
    * 子集仓库
    */
   repos: IDirAndGit[];

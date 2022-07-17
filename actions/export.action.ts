@@ -2,6 +2,7 @@ import { AbstractAction } from '.';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as sGit from 'simple-git';
+import * as os from 'os';
 import {
   IActionParams,
   IDirAndGit,
@@ -28,6 +29,7 @@ export class ExportAction extends AbstractAction {
         const workspace: IWorkspace = {
           path: inputs.path,
           date: new Date(),
+          hostname: os.hostname(),
           repos: results?.subs || [results],
         };
         this.next(
