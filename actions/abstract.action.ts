@@ -1,9 +1,23 @@
-import { Input } from '../commands/';
+import { IAction, IActionParams } from '../interfaces';
 
-export abstract class AbstractAction {
+/**
+ * 抽象活动执行对象
+ */
+export abstract class AbstractAction implements IAction {
+  async next(
+    params: IActionParams,
+    result?: any,
+  ): Promise<void> {
+    if (this.nextHandler)
+      return this.nextHandler.handle(params, result);
+  }
+  protected nextHandler: IAction | undefined;
+  setNext(nextHandler: IAction): IAction {
+    this.nextHandler = nextHandler;
+    return nextHandler;
+  }
   public abstract handle(
-    inputs?: Input[],
-    options?: Input[],
-    extraFlags?: string[],
+    params: IActionParams,
+    result?: any,
   ): Promise<void>;
 }

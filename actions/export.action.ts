@@ -1,80 +1,32 @@
 import { AbstractAction } from '.';
-import { Input } from '../commands';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as sGit from 'simple-git';
-
-interface IGitRemote {
-  name: string;
-  refs: {
-    fetch: string;
-    push: string;
-  };
-}
+import {
+  IActionParams,
+  IDirAndGit,
+  IGitRemote,
+} from '../interfaces';
 
 /**
- * 目录与Git仓库
+ * 导出行为处理
+ * 将目录的内容输出为JSON
  */
-interface IDirAndGit {
-  /**
-   * 目录路径
-   */
-  path: string;
-  /**
-   * Git仓库
-   */
-  git?: IGitRemote[];
-  /**
-   * 子目录
-   */
-  subs?: IDirAndGit[];
-}
-
 export class ExportAction extends AbstractAction {
-  public async handle(
-    inputs: Input[],
-    options?: Input[] | undefined,
-    extraFlags?: string[] | undefined,
-  ): Promise<void> {
-    // exec
+  public async handle({
+    inputs,
+    options,
+    extraFlags,
+  }: IActionParams): Promise<void> {
     this.recursion(
-      { path: this.getRootPath(inputs) },
-      this.getExcludes(options),
+      { path: inputs.path },
+      options?.exclude || [],
     ).then((results) => {
-      this.writeJSONFile(
-        JSON.stringify(results?.subs || results),
+      this.next(
+        { inputs, options, extraFlags },
+        results?.subs || results,
       );
-      // console.dir(JSON.stringify(results));
-      console.log('done');
     });
-    return;
-  }
-
-  writeJSONFile(json: string, filePath?: string): void {
-    fs.writeFileSync(
-      path.resolve(
-        path.join(filePath ?? __dirname, 'wss.json'),
-      ),
-      json,
-      { encoding: 'utf8' },
-    );
-  }
-
-  getRootPath(inputs: Input[]): string {
-    const i = inputs.findIndex(
-      (input) => input.name === 'path',
-    );
-    if (i < 0) throw new Error('Must have a path');
-    return inputs[i].value.toString();
-  }
-
-  getExcludes(options?: Input[]): string[] {
-    if (!options) return [];
-    const i = options.findIndex(
-      (option) => option.name === 'exclude',
-    );
-    if (i < 0) return [];
-    else return options[i].value as string[];
   }
 
   /**
