@@ -5,6 +5,10 @@ import { IDirAndGit } from './dir-and-git.interface';
  */
 export interface IWorkspace {
   /**
+   * 记录编号
+   */
+  id?: number;
+  /**
    * 路径
    */
   path: string;

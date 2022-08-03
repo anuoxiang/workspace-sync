@@ -1,4 +1,4 @@
-import { IGitRemote } from './git-info.interface';
+import { IGitInfo, IGitRemote } from './git-info.interface';
 
 /**
  * 目录与Git仓库
@@ -11,7 +11,7 @@ export interface IDirAndGit {
   /**
    * Git仓库
    */
-  git?: IGitRemote[];
+  git?: IGitInfo;
   /**
    * 子目录
    */

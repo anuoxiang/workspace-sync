@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 import * as commander from 'commander';
+import { CommandLoader } from './command-loader';
 
-import { CommandLoader } from '../commands';
+// const version = require('../package.json').version;
+const version = '0.1.0';
 
-const version = require('../../package.json').version;
 const bootstrap = () => {
-  disclaimer();
   const program = new commander.Command();
 
   program
     .description(
-      'Sync your all projects in the workspace directory.',
+      `Sync your all projects in the workspace directory.
+    Workspace Syncer (${version})\t\tdjango@leadleo.com 2022-07-09`,
     )
     .version(
       version,
@@ -30,14 +31,6 @@ const bootstrap = () => {
   if (!process.argv.slice(2).length) {
     program.outputHelp();
   }
-};
-
-const disclaimer = () => {
-  console.log();
-  console.log(
-    `Workspace Syncer (${version})\t\tdjango@leadleo.com 2022-07-09`,
-  );
-  console.log();
 };
 
 bootstrap();

@@ -7,4 +7,10 @@ export interface IGitRemote {
     fetch: string;
     push: string;
   };
+  branch: string;
+}
+
+export interface IGitInfo {
+  remotes: IGitRemote[];
+  branch: string;
 }
