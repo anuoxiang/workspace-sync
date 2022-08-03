@@ -1,5 +1,9 @@
 import { Command } from 'commander';
-import { MergeCommand, PickupCommand } from './commands';
+import {
+  MergeCommand,
+  PickupCommand,
+  RestoreCommand,
+} from './commands';
 
 /**
  * 命令装载器
@@ -10,5 +14,6 @@ export class CommandLoader {
   public static load(program: Command): void {
     new PickupCommand().load(program);
     new MergeCommand().load(program);
+    new RestoreCommand().load(program);
   }
 }

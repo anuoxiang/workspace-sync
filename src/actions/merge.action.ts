@@ -18,17 +18,10 @@ export class MergeAction {
     conflictResolve: ConflictResolve = 'source',
     conflictJudge: ConflictJudge = 'repo',
   ): Promise<void> {
-    console.log(url, direction, conflictResolve, conflictJudge);
     // 读取本地指定内容
-    let localProfile = await this.files.read(Config.DEFAULT_PROFILE);
-
-    if (!localProfile) throw new Error('缺少本地配置');
-
-    // 单纯的上传覆盖
-    if (direction === 'upload' && conflictResolve === 'overwrite') {
-      this.mockapi.write(url, localProfile);
-      return;
-    }
+    let localProfile = await this.files.read(
+      Config.DEFAULT_PROFILE,
+    );
 
     // 读取远端所有内容
     const allResults = await this.mockapi.findAll(url);
@@ -39,6 +32,26 @@ export class MergeAction {
         r.hostname === localProfile.hostname &&
         r.path === localProfile.path,
     );
+
+    /**
+     * 单纯的下载或者上传
+     * 即目标文件不存在的合并操作
+     * 无所谓是否一致，不需要在意冲突的解决和比对要素
+     */
+    if (direction === 'upload' && !remoteProfile) {
+      this.mockapi.write(url, localProfile);
+      return;
+    } else if (direction === 'download' && !localProfile) {
+      delete remoteProfile.id;
+      this.files.write(
+        Config.DEFAULT_PROFILE,
+        remoteProfile,
+      );
+      return;
+    }
+
+    if (!localProfile) throw new Error('缺少本地配置');
+
     // 如果缺少，需要提示缺少必要信息
     if (!remoteProfile) throw new Error('缺少远端配置');
 
@@ -49,7 +62,10 @@ export class MergeAction {
         this.mockapi.write(url, remoteProfile);
       } else {
         localProfile.repos = remoteProfile.repos;
-        this.files.write(Config.DEFAULT_PROFILE, localProfile);
+        this.files.write(
+          Config.DEFAULT_PROFILE,
+          localProfile,
+        );
       }
       return;
     }
@@ -81,8 +97,17 @@ export class MergeAction {
     conflictJudge: ConflictJudge,
   ): IDirAndGit[] {
     if (conflictJudge === 'directory')
-      return this.mergeWithDirectory(source, target, conflictResolve);
-    else return this.mergeWithRepo(source, target, conflictResolve);
+      return this.mergeWithDirectory(
+        source,
+        target,
+        conflictResolve,
+      );
+    else
+      return this.mergeWithRepo(
+        source,
+        target,
+        conflictResolve,
+      );
   }
 
   /**
