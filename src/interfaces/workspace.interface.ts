@@ -24,4 +24,8 @@ export interface IWorkspace {
    * 子集仓库
    */
   repos: IDirAndGit[];
+  /**
+   * 排除模式
+   */
+  exclude: string[];
 }

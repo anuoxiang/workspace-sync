@@ -33,6 +33,16 @@ export class MergeAction {
         r.path === localProfile.path,
     );
 
+    // 排除明显错误
+    if (direction === 'upload' && !localProfile)
+      throw new Error(
+        'Upload but local profile file not exist.',
+      );
+    if (direction === 'download' && !remoteProfile)
+      throw new Error(
+        'Download but remote profile file not exist.',
+      );
+
     /**
      * 单纯的下载或者上传
      * 即目标文件不存在的合并操作
@@ -49,20 +59,19 @@ export class MergeAction {
       );
       return;
     }
-
-    if (!localProfile) throw new Error('缺少本地配置');
-
-    // 如果缺少，需要提示缺少必要信息
-    if (!remoteProfile) throw new Error('缺少远端配置');
-
-    // 如果知识覆盖，没有特别的算法，只需要覆盖即可
-    if (conflictResolve === 'overwrite') {
+    // 如果是“覆盖”操作，并且文件存在
+    // 因为上面两个条件已经判断不存在目标配置文件，到这里说明文件均
+    // 覆盖操作是更新日期，以及repos信息，不涉及path，考虑相对路径
+    // 可以被更换
+    else if (conflictResolve === 'overwrite') {
       if (direction === 'upload') {
         remoteProfile.repos = localProfile.repos;
-        this.mockapi.write(url, remoteProfile);
+        remoteProfile.date = new Date();
+        await this.mockapi.write(url, remoteProfile);
       } else {
         localProfile.repos = remoteProfile.repos;
-        this.files.write(
+        localProfile.date = remoteProfile.date;
+        await this.files.write(
           Config.DEFAULT_PROFILE,
           localProfile,
         );
